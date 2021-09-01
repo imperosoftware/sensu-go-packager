@@ -18,6 +18,7 @@ agent:
 
 blocks:
   - name: "Build sensu-agent"
+    dependencies: []
     task:
       jobs:
         - name: "Build sensu-agent"
