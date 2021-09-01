@@ -2,6 +2,9 @@ version: "v1.0"
 name: "Sensu-go OSS Packager"
 
 agent:
+  machine:
+    type: e1-standard-2
+
   containers:
     - name: "gobuilder"
       image: "registry.semaphoreci.com/golang:1.16.6-stretch"
