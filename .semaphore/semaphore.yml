@@ -31,8 +31,8 @@ blocks:
           commands_file: "cmd/test-sensu-go-agent.sh"
         - name: "Test sensu-go backend"
           commands_file: "cmd/test-sensu-go-backend.sh"
-        - name: "Test sensu-go ctl"
-          commands_file: "cmd/test-sensu-go-ctl.sh"
+        - name: "Test sensu-go cli"
+          commands_file: "cmd/test-sensu-go-cli.sh"
 
   - name: "Repackage sensu-go deb packages"
     dependencies:
