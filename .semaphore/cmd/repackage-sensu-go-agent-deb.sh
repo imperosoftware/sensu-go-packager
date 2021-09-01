@@ -16,11 +16,7 @@ sed '/usr\/sbin\/sensu-agent/d' -i'' DEBIAN/md5sums
 md5sum usr/sbin/sensu-agent >> DEBIAN/md5sums
 
 # Update the version (append ~ce)
-sed -re 's/^(Version: .+)$/\1~ce/' \
-  -e 's#^(Homepage:).+$#\1 https://github.com/sensu/sensu-go#' \
-  -e 's/^(Maintainer:).+$/\1 Caius <sensu-go-oss@caius.name>/' \
-  -e 's/^(Installed-Size:).+$/\1 '$(du -sk . | awk '{ print $1 }')'/' \
-  -i'' DEBIAN/control
+sed -re 's/^(Version: .+)$/\1~ce/' -e 's#^(Homepage:).+$#\1 https://github.com/sensu/sensu-go#' -e 's/^(Maintainer:).+$/\1 Caius <sensu-go-oss@caius.name>/' -e 's/^(Installed-Size:).+$/\1 '$(du -sk . | awk '{ print $1 }')'/' -i'' DEBIAN/control
 
 # dpkg-deb whinges if we don't do this first
 chmod 755 DEBIAN/{postinst,postrm,preinst,prerm}
