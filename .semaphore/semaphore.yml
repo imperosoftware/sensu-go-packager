@@ -21,8 +21,8 @@ blocks:
     dependencies: []
     task:
       jobs:
-        - name: "Build sensu-go agent"
-          commands_file: "cmd/build-sensu-go-binaries/build-sensu-go-agent.sh"
+        - name: "Build sensu-go binaries"
+          commands_file: "cmd/build-sensu-go-binaries.sh"
 
   - name: "Test sensu-go binaries"
     dependencies:
@@ -30,7 +30,7 @@ blocks:
     task:
       jobs:
         - name: "Test sensu-go agent"
-          commands_file: "cmd/test-sensu-go-binaries/test-sensu-go-agent.sh"
+          commands_file: "cmd/test-sensu-go-agent.sh"
 
   - name: "Repackage sensu-go deb packages"
     dependencies:
