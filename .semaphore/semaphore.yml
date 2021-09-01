@@ -35,7 +35,7 @@ blocks:
 
   - name: "Repackage sensu-agent"
     dependencies:
-      - "Build sensu-agent"
+      - "Build sensu-go binaries"
     task:
       jobs:
         - name: "Repackage sensu-agent"
