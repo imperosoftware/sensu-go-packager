@@ -39,7 +39,7 @@ blocks:
     task:
       jobs:
         - name: "Test sensu-go agent"
-          command_file: "cmd/test-sensu-go-binaries/test-sensu-go-agent.sh"
+          commands_file: "cmd/test-sensu-go-binaries/test-sensu-go-agent.sh"
 
   - name: "Repackage sensu-go deb packages"
     dependencies:
