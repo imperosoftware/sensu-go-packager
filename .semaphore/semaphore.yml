@@ -65,7 +65,7 @@ blocks:
             - "rm usr/sbin/sensu-agent"
             - "artifact pull workflow sensu-agent --destination usr/sbin/sensu-agent"
             # Update md5sum with new binary's hash
-            - "sed -e '/usr\/sbin\/sensu-agent/ d' -i '' md5sum"
+            - "sed -e '/usr\\/sbin\\/sensu-agent/ d' -i '' md5sum"
             - "md5sum usr/sbin/sensu-agent >> md5sum"
             # Package everything back up
             - "dpkg-deb --build sensu-go-agent impero-${SENSU_GO_PKG_NAME}"
