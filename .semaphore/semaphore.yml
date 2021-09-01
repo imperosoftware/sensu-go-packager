@@ -41,3 +41,5 @@ blocks:
       jobs:
         - name: "Repackage sensu-go-agent deb"
           commands_file: "cmd/repackage-sensu-go-agent-deb.sh"
+        - name: "Repackage sensu-go-backend deb"
+          commands_file: "cmd/repackage-sensu-go-backend-deb.sh"
