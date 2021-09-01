@@ -1,13 +1,21 @@
-version: v1.0
-name: Initial Pipeline
+version: "v1.0"
+name: "Sensu-go OSS Packager"
+
 agent:
-  machine:
-    type: e1-standard-2
-    os_image: ubuntu1804
+  containers:
+    - name: "gobuilder"
+      image: "registry.semaphoreci.com/golang:1.16.6-stretch"
+
 blocks:
-  - name: 'Block #1'
+  - name: "sensu-agent"
     task:
       jobs:
-        - name: 'Job #1'
+        - name: "Build sensu-agent"
           commands:
-            - checkout
+            - "git -c advice.detachedHead=false clone --branch v6.4.1 --depth 1 https://github.com/sensu/sensu-go"
+            - "cd sensu-go"
+            # FIXME: make Version dynamic
+            # FIXME: make BuildDate dynamic
+            # FIXME: make BuildSHA dynamic
+            - "go build -ldflags -X \"github.com/sensu/sensu-go/version.Version=v6.4.1\" -X \"github.com/sensu/sensu-go/version.BuildDate=2021-09-01\" -X \"github.com/sensu/sensu-go/version.BuildSHA=b2bab0bb25210628d714a56589c48cfda46419e0\" -o bin/sensu-agent ./cmd/sensu-agent"
+            - "artifact push job --expire-in 1d bin/sensu-agent"
