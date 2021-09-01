@@ -11,12 +11,12 @@ dpkg-deb --control ${SENSU_GO_PKG_NAME} sensu-go-cli/DEBIAN
 pushd sensu-go-cli
 
 # Swap out the binary
-rm usr/sbin/sensuctl
-artifact pull workflow sensuctl --destination usr/sbin/sensuctl
+rm usr/bin/sensuctl
+artifact pull workflow sensuctl --destination usr/bin/sensuctl
 
 # Update md5sum with new binary's hash
-sed '/usr\/sbin\/sensuctl/d' -i'' DEBIAN/md5sums
-md5sum usr/sbin/sensuctl >> DEBIAN/md5sums
+sed '/usr\/bin\/sensuctl/d' -i'' DEBIAN/md5sums
+md5sum usr/bin/sensuctl >> DEBIAN/md5sums
 
 # Update the version (append ~ce)
 sed -re 's/^(Version: .+)$/\1~ce/' -e 's#^(Homepage:).+$#\1 https://github.com/sensu/sensu-go#' -e 's/^(Maintainer:).+$/\1 Caius <sensu-go-oss@caius.name>/' -e 's/^(Installed-Size:).+$/\1 '$(du -sk . | awk '{ print $1 }')'/' -i'' DEBIAN/control
