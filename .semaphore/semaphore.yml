@@ -5,8 +5,6 @@ global_job_config:
   env_vars:
     - name: "SENSU_GO_VERSION"
       value: "v6.4.1"
-    - name: "SENSU_GO_PKG_NAME"
-      value: "sensu-go-agent_6.4.1-4969_amd64.deb"
 
 agent:
   machine:

@@ -1,5 +1,8 @@
 pushd /mnt
 
+SENSU_GO_PKG_NAME=$(curl -sL https://packagecloud.io/sensu/stable/debian/dists/stretch/main/binary-amd64/Packages | awk '($1 ~ /Filename/) && ($2 ~ /sensu-go-agent_'${SENSU_GO_VERSION#v}'/) { n = split($2, bits, "/"); print bits[n] }')
+SENSU_CE_PKG_NAME=$(echo $SENSU_GO_PKG_NAME | sed -re 's/('${SENSU_GO_VERSION#v}'-[0-9]+)/\1-ce/')
+
 # Grab & unpack the deb
 curl -sfL -o ${SENSU_GO_PKG_NAME} https://packagecloud.io/sensu/stable/packages/debian/stretch/${SENSU_GO_PKG_NAME}/download.deb
 dpkg-deb --vextract ${SENSU_GO_PKG_NAME} sensu-go-agent
@@ -24,6 +27,5 @@ chmod 755 DEBIAN/{postinst,postrm,preinst,prerm}
 popd
 
 # Package everything back up, add -ce after version in deb filename
-SENSU_CE_PKG_NAME=$(echo $SENSU_GO_PKG_NAME | sed -re 's/('${SENSU_GO_VERSION#v}'-[0-9]+)/\1-ce/')
 dpkg-deb --build sensu-go-agent $SENSU_CE_PKG_NAME
 artifact push workflow --expire-in 1w $SENSU_CE_PKG_NAME
