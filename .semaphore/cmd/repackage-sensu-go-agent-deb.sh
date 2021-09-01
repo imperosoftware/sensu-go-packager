@@ -17,4 +17,4 @@ md5sum usr/sbin/sensu-agent >> md5sum
 
 # Package everything back up, add -ce after version in deb filename
 dpkg-deb --build sensu-go-agent ${SENSU_GO_PKG_NAME/${SENSU_GO_VERSION#v}/${SENSU_GO_VERSION#v}-ce}
-artifact push workflow ${SENSU_GO_PKG_NAME/${SENSU_GO_VERSION#v}/${SENSU_GO_VERSION#v}-ce}
+artifact push workflow --expires-in 1w ${SENSU_GO_PKG_NAME/${SENSU_GO_VERSION#v}/${SENSU_GO_VERSION#v}-ce}
