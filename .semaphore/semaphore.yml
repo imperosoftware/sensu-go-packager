@@ -25,3 +25,18 @@ blocks:
             - "cd sensu-go"
             - "go build -ldflags '-X \"github.com/sensu/sensu-go/version.Version='${SENSU_GO_VERSION}'\" -X \"github.com/sensu/sensu-go/version.BuildDate='$(date +%Y-%m-%d)'\" -X \"github.com/sensu/sensu-go/version.BuildSHA='$(git rev-parse HEAD)'\"' -o bin/sensu-agent ./cmd/sensu-agent"
             - "artifact push job --expire-in 1d bin/sensu-agent"
+
+        - name: "Repackage sensu-agent"
+          depends_on:
+            - "Build sensu-agent"
+          commands:
+            - "cd /" # go image defaults you in /go
+            - "mkdir sensu-go-agent"
+            - "curl -sfL -o ${SENSU_GO_PKG_NAME} https://packagecloud.io/sensu/stable/packages/debian/stretch/${SENSU_GO_PKG_NAME}/download.deb"
+            - "dpkg-deb -x sensu-go-agent_6.4.1-4969_amd64.deb sensu-go-agent/"
+            - "artifact pull job sensu-agent -fd sensu-go-agent/usr/sbin/sensu-agent"
+            # Update sensu-agent binary in the md5sum file
+            - "sed -e '#usr/sbin/sensu-agent# d' -i '' sensu-go-agent/md5sum"
+            - "(cd sensu-go-agent; md5sum usr/sbin/sensu-agent) >> md5sum"
+            - "dpkg-deb --build sensu-go-agent impero-${SENSU_GO_PKG_NAME}"
+            - "artifact push job impero-${SENSU_GO_PKG_NAME}"
