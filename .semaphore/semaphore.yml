@@ -15,15 +15,13 @@ blocks:
       env_vars:
         - name: "SENSU_GO_VERSION"
           value: "v6.4.1"
-        - name: "SENSU_GO_BUILD_DATE"
-          value: "2021-09-01"
-        - name: "SENSU_GO_SHA"
-          value: "b2bab0bb25210628d714a56589c48cfda46419e0"
+        - name: "SENSU_GO_PKG_NAME"
+          value: "sensu-go-agent_6.4.1-4969_amd64.deb"
       jobs:
         - name: "Build sensu-agent"
           commands:
             - "cd /" # go image defaults you in /go
             - "git -c advice.detachedHead=false clone --branch ${SENSU_GO_VERSION} --depth 1 https://github.com/sensu/sensu-go"
             - "cd sensu-go"
-            - "go build -ldflags '-X \"github.com/sensu/sensu-go/version.Version=${SENSU_GO_VERSION}\" -X \"github.com/sensu/sensu-go/version.BuildDate=${SENSU_GO_BUILD_DATE}\" -X \"github.com/sensu/sensu-go/version.BuildSHA=${SENSU_GO_SHA}\"' -o bin/sensu-agent ./cmd/sensu-agent"
+            - "go build -ldflags '-X \"github.com/sensu/sensu-go/version.Version='${SENSU_GO_VERSION}'\" -X \"github.com/sensu/sensu-go/version.BuildDate='$(date +%Y-%m-%d)'\" -X \"github.com/sensu/sensu-go/version.BuildSHA='$(git rev-parse HEAD)'\"' -o bin/sensu-agent ./cmd/sensu-agent"
             - "artifact push job --expire-in 1d bin/sensu-agent"
