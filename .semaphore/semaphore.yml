@@ -1,6 +1,12 @@
 version: "v1.0"
 name: "Sensu-go OSS Packager"
 
+env_vars:
+  - name: "SENSU_GO_VERSION"
+    value: "v6.4.1"
+  - name: "SENSU_GO_PKG_NAME"
+    value: "sensu-go-agent_6.4.1-4969_amd64.deb"
+
 agent:
   machine:
     type: e1-standard-2
@@ -10,13 +16,8 @@ agent:
       image: "registry.semaphoreci.com/golang:1.16.6-stretch"
 
 blocks:
-  - name: "sensu-agent"
+  - name: "Build sensu-agent"
     task:
-      env_vars:
-        - name: "SENSU_GO_VERSION"
-          value: "v6.4.1"
-        - name: "SENSU_GO_PKG_NAME"
-          value: "sensu-go-agent_6.4.1-4969_amd64.deb"
       jobs:
         - name: "Build sensu-agent"
           commands:
@@ -26,9 +27,12 @@ blocks:
             - "go build -ldflags '-X \"github.com/sensu/sensu-go/version.Version='${SENSU_GO_VERSION}'\" -X \"github.com/sensu/sensu-go/version.BuildDate='$(date +%Y-%m-%d)'\" -X \"github.com/sensu/sensu-go/version.BuildSHA='$(git rev-parse HEAD)'\"' -o bin/sensu-agent ./cmd/sensu-agent"
             - "artifact push job --expire-in 1d bin/sensu-agent"
 
+  - name: "Repackage sensu-agent"
+    dependencies:
+      - "Build sensu-agent"
+    task:
+      jobs:
         - name: "Repackage sensu-agent"
-          depends_on:
-            - "Build sensu-agent"
           commands:
             - "cd /" # go image defaults you in /go
             - "mkdir sensu-go-agent"
