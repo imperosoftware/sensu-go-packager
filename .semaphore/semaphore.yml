@@ -21,9 +21,9 @@ blocks:
     dependencies: []
     task:
       jobs:
-        - name: "Build sensu-agent"
+        - name: "Build sensu-go agent"
           commands:
-            - "cd /" # go image defaults you in /go
+            - "cd /"
             - "git -c advice.detachedHead=false clone --branch ${SENSU_GO_VERSION} --depth 1 https://github.com/sensu/sensu-go"
             - "cd sensu-go"
             - "go build -ldflags '-X \"github.com/sensu/sensu-go/version.Version='${SENSU_GO_VERSION}'\" -X \"github.com/sensu/sensu-go/version.BuildDate='$(date +%Y-%m-%d)'\" -X \"github.com/sensu/sensu-go/version.BuildSHA='$(git rev-parse HEAD)'\"' -o bin/sensu-agent ./cmd/sensu-agent"
@@ -33,20 +33,40 @@ blocks:
             - "artifact push workflow --expire-in 1d bin/sensu-backend"
             - "artifact push workflow --expire-in 1d bin/sensuctl"
 
-  - name: "Repackage sensu-agent"
+  - name: "Test sensu-go binaries"
     dependencies:
       - "Build sensu-go binaries"
     task:
       jobs:
-        - name: "Repackage sensu-agent"
+        - name: "Test sensu-go agent"
           commands:
-            - "cd /" # go image defaults you in /go
+            - "cd /"
+            - "artifact pull workflow sensu-agent"
+            - "chmod +x sensu-agent"
+            - "./sensu-agent version | grep $(date +%Y-%m-%d)"
+            - "./sensu-agent version | grep ${SENSU_GO_VERSION}"
+            - "./sensu-agent version | grep 'community edition'"
+
+  - name: "Repackage sensu-go deb packages"
+    dependencies:
+      - "Test sensu-go binaries"
+    task:
+      jobs:
+        - name: "Repackage sensu-go-agent deb"
+          commands:
+            - "cd /"
+            # Preparation to do a switcherooni
             - "mkdir sensu-go-agent"
             - "curl -sfL -o ${SENSU_GO_PKG_NAME} https://packagecloud.io/sensu/stable/packages/debian/stretch/${SENSU_GO_PKG_NAME}/download.deb"
-            - "dpkg-deb -x sensu-go-agent_6.4.1-4969_amd64.deb sensu-go-agent/"
-            - "artifact pull workflow sensu-agent -fd sensu-go-agent/usr/sbin/sensu-agent"
-            # Update sensu-agent binary in the md5sum file
-            - "sed -e '#usr/sbin/sensu-agent# d' -i '' sensu-go-agent/md5sum"
-            - "(cd sensu-go-agent; md5sum usr/sbin/sensu-agent) >> md5sum"
+            # Unpack the deb
+            - "dpkg-deb -x ${SENSU_GO_PKG_NAME} sensu-go-agent/"
+            - "pushd sensu-go-agent"
+            # Swap out the binary
+            - "rm usr/sbin/sensu-agent"
+            - "artifact pull workflow sensu-agent --destination usr/sbin/sensu-agent"
+            # Update md5sum with new binary's hash
+            - "sed -e '/usr\/sbin\/sensu-agent/ d' -i '' md5sum"
+            - "md5sum usr/sbin/sensu-agent >> md5sum"
+            # Package everything back up
             - "dpkg-deb --build sensu-go-agent impero-${SENSU_GO_PKG_NAME}"
             - "artifact push workflow impero-${SENSU_GO_PKG_NAME}"
