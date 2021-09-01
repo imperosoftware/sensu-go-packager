@@ -22,10 +22,8 @@ blocks:
       jobs:
         - name: "Build sensu-agent"
           commands:
+            - "cd /" # go image defaults you in /go
             - "git -c advice.detachedHead=false clone --branch ${SENSU_GO_VERSION} --depth 1 https://github.com/sensu/sensu-go"
             - "cd sensu-go"
-            # FIXME: make Version dynamic
-            # FIXME: make BuildDate dynamic
-            # FIXME: make BuildSHA dynamic
             - "go build -ldflags '-X \"github.com/sensu/sensu-go/version.Version=${SENSU_GO_VERSION}\" -X \"github.com/sensu/sensu-go/version.BuildDate=${SENSU_GO_BUILD_DATE}\" -X \"github.com/sensu/sensu-go/version.BuildSHA=${SENSU_GO_SHA}\"' -o bin/sensu-agent ./cmd/sensu-agent"
             - "artifact push job --expire-in 1d bin/sensu-agent"
