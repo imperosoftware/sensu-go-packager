@@ -1,13 +1,54 @@
-version: v1.0
-name: Initial Pipeline
+version: "v1.0"
+name: "Sensu-go OSS Packager"
+
 agent:
   machine:
     type: e1-standard-2
-    os_image: ubuntu1804
+
+  containers:
+    - name: "gobuilder"
+      image: "registry.semaphoreci.com/golang:1.16.6-stretch"
+
+global_job_config:
+  prologue:
+    commands:
+      - "checkout"
+      - "source versions.sh"
+      - "mkdir -p /impero"
+      - "cd /impero"
+
 blocks:
-  - name: 'Block #1'
+  - name: "Build sensu-go binaries"
+    dependencies: []
     task:
       jobs:
-        - name: 'Job #1'
-          commands:
-            - checkout
+        - name: "Build sensu-go binaries"
+          commands_file: "cmd/build-sensu-go-binaries.sh"
+
+  - name: "Test sensu-go binaries"
+    dependencies:
+      - "Build sensu-go binaries"
+    task:
+      jobs:
+        - name: "Test sensu-go agent"
+          commands_file: "cmd/test-sensu-go-agent.sh"
+        - name: "Test sensu-go backend"
+          commands_file: "cmd/test-sensu-go-backend.sh"
+        - name: "Test sensu-go cli"
+          commands_file: "cmd/test-sensu-go-cli.sh"
+
+  - name: "Repackage sensu-go deb packages"
+    dependencies:
+      - "Test sensu-go binaries"
+    task:
+      jobs:
+        - name: "Repackage sensu-go-agent deb"
+          commands_file: "cmd/repackage-sensu-go-agent-deb.sh"
+        - name: "Repackage sensu-go-backend deb"
+          commands_file: "cmd/repackage-sensu-go-backend-deb.sh"
+        - name: "Repackage sensu-go-cli deb"
+          commands_file: "cmd/repackage-sensu-go-cli-deb.sh"
+
+promotions:
+  - name: Package Release
+    pipeline_file: release.yml
