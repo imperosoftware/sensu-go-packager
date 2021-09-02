@@ -6,13 +6,21 @@ agent:
     type: "e1-standard-2"
     os_image: "ubuntu2004"
 
+global_job_config:
+  prologue:
+    commands:
+      - "checkout"
+      - "source versions.sh"
+
 blocks:
   - name: "Release packages on gemfury"
-    # run:
-    #   when: "branch = 'main'"
     task:
       secrets:
         - name: "Gemfury Push Token"
       jobs:
         - name: "Release sensu-go-agent package"
           commands_file: "cmd/deploy-sensu-go-agent.sh"
+        - name: "Release sensu-go-backend package"
+          commands_file: "cmd/deploy-sensu-go-backend.sh"
+        - name: "Release sensu-go-cli package"
+          commands_file: "cmd/deploy-sensu-go-cli.sh"
