@@ -2,9 +2,13 @@ version: "v1.0"
 name: "Sensu-go OSS Packager"
 
 global_job_config:
-  env_vars:
-    - name: "SENSU_GO_VERSION"
-      value: "v6.4.1"
+  prologue:
+    - name: "Load Versions"
+      commands:
+        - "checkout"
+        - "source versions.sh"
+        - "mkdir -p /impero"
+        - "cd /impero"
 
 agent:
   machine:

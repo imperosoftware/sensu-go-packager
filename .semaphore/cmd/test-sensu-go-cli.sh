@@ -1,4 +1,3 @@
-cd /
 artifact pull workflow sensuctl
 chmod +x sensuctl
 # Belt & braces checks

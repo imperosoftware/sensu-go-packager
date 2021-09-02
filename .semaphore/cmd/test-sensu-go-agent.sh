@@ -1,4 +1,3 @@
-cd /
 artifact pull workflow sensu-agent
 chmod +x sensu-agent
 # Belt & braces checks

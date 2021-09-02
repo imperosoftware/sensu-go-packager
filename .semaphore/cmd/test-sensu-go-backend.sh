@@ -1,4 +1,3 @@
-cd /
 artifact pull workflow sensu-backend
 chmod +x sensu-backend
 # Belt & braces checks

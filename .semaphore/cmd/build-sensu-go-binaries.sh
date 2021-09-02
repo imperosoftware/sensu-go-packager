@@ -1,5 +1,3 @@
-pushd /
-
 git -c advice.detachedHead=false clone --branch ${SENSU_GO_VERSION} --depth 1 https://github.com/sensu/sensu-go
 
 pushd sensu-go
