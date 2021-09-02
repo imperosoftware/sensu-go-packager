@@ -1,14 +1,6 @@
 version: "v1.0"
 name: "Sensu-go OSS Packager"
 
-global_job_config:
-  prologue:
-    commands:
-      - "checkout"
-      - "source versions.sh"
-      - "mkdir -p /impero"
-      - "cd /impero"
-
 agent:
   machine:
     type: e1-standard-2
@@ -16,6 +8,14 @@ agent:
   containers:
     - name: "gobuilder"
       image: "registry.semaphoreci.com/golang:1.16.6-stretch"
+
+global_job_config:
+  prologue:
+    commands:
+      - "checkout"
+      - "source versions.sh"
+      - "mkdir -p /impero"
+      - "cd /impero"
 
 blocks:
   - name: "Build sensu-go binaries"
