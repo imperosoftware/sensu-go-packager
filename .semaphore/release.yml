@@ -12,7 +12,7 @@ blocks:
       when: "branch = 'main'"
     task:
       secrets:
-        - "GEMFURY_TOKEN"
+        - name: "Gemfury Push Token"
       job:
         - name: "Release sensu-go-agent package"
           commands_file: "cmd/deploy-sensu-go-agent.sh"
