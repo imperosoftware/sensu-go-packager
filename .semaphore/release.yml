@@ -13,6 +13,6 @@ blocks:
     task:
       secrets:
         - name: "Gemfury Push Token"
-      job:
+      jobs:
         - name: "Release sensu-go-agent package"
           commands_file: "cmd/deploy-sensu-go-agent.sh"
