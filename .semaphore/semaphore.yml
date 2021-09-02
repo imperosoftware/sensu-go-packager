@@ -3,12 +3,11 @@ name: "Sensu-go OSS Packager"
 
 global_job_config:
   prologue:
-    - name: "Load Versions"
-      commands:
-        - "checkout"
-        - "source versions.sh"
-        - "mkdir -p /impero"
-        - "cd /impero"
+    commands:
+      - "checkout"
+      - "source versions.sh"
+      - "mkdir -p /impero"
+      - "cd /impero"
 
 agent:
   machine:
