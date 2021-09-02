@@ -48,3 +48,7 @@ blocks:
           commands_file: "cmd/repackage-sensu-go-backend-deb.sh"
         - name: "Repackage sensu-go-cli deb"
           commands_file: "cmd/repackage-sensu-go-cli-deb.sh"
+
+promotions:
+  - name: Package Release
+    pipeline_file: release.yml
