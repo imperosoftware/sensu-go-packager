@@ -1,1 +1,1 @@
-export SENSU_GO_VERSION=6.3.0
+export SENSU_GO_VERSION=6.4.1
