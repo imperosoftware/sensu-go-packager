@@ -19,6 +19,8 @@ global_job_config:
 
 blocks:
   - name: "Build sensu-go binaries"
+    run:
+      when: "change_in('versions.sh', '/.semaphore/')"
     dependencies: []
     task:
       jobs:
