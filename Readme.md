@@ -4,7 +4,17 @@
 
 This repo is an attempt to build the OSS binaries and splice them into the enterprise deb packages for Debian, so we get the best of both worlds.
 
-## Procedure
+## Instructions
+
+### Adding a new release
+
+- Edit `versions.sh` to add the new version you want built
+- Commit on a branch & open a pull request
+- Check semaphore builds & tests the packages correctly, on the workflow page click "Package Release" and "Start promotion"
+- New packages will be available from Gemfury to install
+- Merge down PR
+
+## Internals
 
 The magic happens in `.semaphore/semaphore.yml`.
 
