@@ -13,6 +13,7 @@ pushd sensu-go-agent
 # Swap out the binary
 rm usr/sbin/sensu-agent
 artifact pull workflow sensu-agent --destination usr/sbin/sensu-agent
+chmod 755 usr/sbin/sensu-agent
 
 # Update md5sum with new binary's hash
 sed '/usr\/sbin\/sensu-agent/d' -i'' DEBIAN/md5sums

@@ -13,6 +13,7 @@ pushd sensu-go-backend
 # Swap out the binary
 rm usr/sbin/sensu-backend
 artifact pull workflow sensu-backend --destination usr/sbin/sensu-backend
+chmod 755 usr/sbin/sensu-backend
 
 # Update md5sum with new binary's hash
 sed '/usr\/sbin\/sensu-backend/d' -i'' DEBIAN/md5sums

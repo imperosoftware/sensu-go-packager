@@ -13,6 +13,7 @@ pushd sensu-go-cli
 # Swap out the binary
 rm usr/bin/sensuctl
 artifact pull workflow sensuctl --destination usr/bin/sensuctl
+chmod 755 usr/bin/sensuctl
 
 # Update md5sum with new binary's hash
 sed '/usr\/bin\/sensuctl/d' -i'' DEBIAN/md5sums
